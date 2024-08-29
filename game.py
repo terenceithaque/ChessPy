@@ -7,6 +7,7 @@
 """
 import pygame
 pygame.init() # Init pygame to access its content
+from board import * # The board.py script contains a Board method which represent the graphical board for the game
 
 win_width = 800 # The width of a game window
 win_height = 600 # The height of a game window
@@ -17,14 +18,18 @@ class Game:
         self.window = pygame.display.set_mode((win_width, win_height)) # Create a game window with the win_width, win_height dimensions
         pygame.display.set_caption("Chess !") # Set a caption for the game window
 
-        self.grid = [0,0,0,0,0,0,0,0,
-                     0,0,0,0,0,0,0,0,
-                     0,0,0,0,0,0,0,0,
-                     0,0,0,0,0,0,0,0,
-                     0,0,0,0,0,0,0,0,
-                     0,0,0,0,0,0,0,0,
-                     0,0,0,0,0,0,0,0,
-                     0,0,0,0,0,0,0,0] # The grid which represent the game board for the program
+        self.grid = [[0,0,0,0,0,0,0,0],
+                     [0,0,0,0,0,0,0,0],
+                     [0,0,0,0,0,0,0,0],
+                     [0,0,0,0,0,0,0,0],
+                     [0,0,0,0,0,0,0,0],
+                     [0,0,0,0,0,0,0,0],
+                     [0,0,0,0,0,0,0,0],
+                     [0,0,0,0,0,0,0,0]] # The grid which represent the game board for the program. Here, 0 means a cell is empty.
+        
+
+        self.board = Board(self.window, self.grid) # Create a new graphical game board
+        self.board.draw_squares() # Draw the squares of the board
 
     def run(self): 
         "Run the game loop."
@@ -34,7 +39,10 @@ class Game:
         while running: # While the game is still running
             for event in pygame.event.get(): # Capture any event that happens during the game
                 if event.type == pygame.QUIT: # If the player wants to stop playing
-                    running = False # Stop the game right now               
+                    running = False # Stop the game right now       
+
+
+            pygame.display.flip() # Update the display                    
 
 
 
