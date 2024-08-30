@@ -25,7 +25,7 @@ class Game:
                      [0,0,0,0,0,0,0,0],
                      [0,0,0,0,0,0,0,0],
                      [0,0,0,0,0,0,0,0],
-                     [0,0,0,0,0,0,0,0]] # The grid which represent the game board for the program. Here, 0 means a cell is empty.
+                     [0,0,0,0,0,0,0,0]] # The grid which represent the game board for the program. Here, 0 means a cell is empty. Eeach list in the grid represent a row.
         
 
         self.board = Board(self.window, self.grid) # Create a new graphical game board
@@ -39,7 +39,7 @@ class Game:
         while running: # While the game is still running
             for event in pygame.event.get(): # Capture any event that happens during the game
                 if event.type == pygame.QUIT: # If the player wants to stop playing
-                    running = False # Stop the game right now       
+                    running = False       
 
 
             pygame.display.flip() # Update the display                    

@@ -14,8 +14,8 @@ class Board:
     def draw_squares(self):
         "Draws all board squares based on the length of the grid"
 
-        square_size = 98 # Size for each square on the board
-        square_spacing = 2 # Spacing between squares
+        square_size = 75 # Size for each square on the board
+        square_spacing = 1 # Spacing between squares
         for row in range(len(self.grid)): # For each row of the grid
             print(self.grid[row])
             for col in range(len(self.grid[row])): # For each column of the row
