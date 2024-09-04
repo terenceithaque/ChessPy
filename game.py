@@ -7,11 +7,21 @@
 """
 import pygame
 pygame.init() # Init pygame to access its content
+from tkinter import messagebox # Import messagebox from tkinter 
 from board import * # The board.py script contains a Board class which represent the graphical board for the game
 from piece import * # The piece.py script contains a GamePiece class which allows to add a piece (pawn, king,...) to the game
+import os
 
 win_width = 800 # The width of a game window
 win_height = 600 # The height of a game window
+
+
+def ask_quit():
+    "Ask the player if he wants to quit the game and returns a boolean"
+    # Ask the player if he wants to quit
+    quit = messagebox.askyesno("Do you really want to quit ?", "If you quit the game, all progress will be lost. Are you sure you want to do this ?")
+
+    return quit # Return the player's answer as a boolean
 
 class Game:
     def __init__(self):
@@ -30,7 +40,60 @@ class Game:
     
 
         self.board = Board(self.window, self.grid) # Create a new graphical game board
-        
+
+
+    def spawn_player_pieces(self):
+        "Spawn all the player's pieces"
+        # Spawn the player's pawns
+        self.player_pieces= [] # List of the player's pieces
+        for x in range(8): # For each x number between 0 included and 7 excluded
+            pawn = GamePiece(self.window, board=self.board, name="pawn", color=(255,255,255), image_path=os.path.abspath("assets/images/pawn.jpg")) # Create a new pawn
+            pawn.set_position(grid_x=x, grid_y=6) # Set the position of the pawn to 0 (x coordinate) and 6 (y)
+            self.player_pieces.append(pawn) # Add the pawn to the list
+
+
+        # Spawn other pieces for the player
+        for x in range(8): # For each x number between 0 included and 7 excluded
+            if x == 0 or x == 7: # If x is equal to 0 or 7
+                # Spawn a rook at this position (x, y=7)
+                rook = GamePiece(window=self.window, board=self.board, name="rook", color=(255,255,255), image_path=os.path.abspath("assets/images/rook.jpg"))
+                rook.set_position(grid_x=x, grid_y=7) 
+                self.player_pieces.append(rook) # Append the new rook to the list of the player's pieces
+
+
+            if x==1 or x==6: # If x is equal to 1 or 6
+                # Spawn a knight at this position
+                knight = GamePiece(window=self.window, board=self.board, name="knight", color=(255,255,255), image_path=os.path.abspath("assets/images/knight.jpg"))
+                knight.set_position(grid_x=x, grid_y=7)
+                self.player_pieces.append(knight) # Append the new knight to the list
+
+            if x==2 or x==5: # If x is equal to 1 or 5
+                # Spawn a bishop at this position
+                bishop = GamePiece(window=self.window, board=self.board, name="bishop", color=(255,255,255), image_path=os.path.abspath("assets/images/bishop.jpg"))
+                bishop.set_position(grid_x=x, grid_y=7)
+                self.player_pieces.append(bishop) # Append the new bishop to the list     
+
+
+            if x == 3: # If x is equal to 3
+                # Spawn the queen at this position
+                queen = GamePiece(window=self.window, board=self.board, name="queen", color=(255,255,255), image_path=os.path.abspath("assets/images/queen.jpg"))
+                queen.set_position(grid_x=x, grid_y=7)
+                self.player_pieces.append(queen) # Append the queen to the list
+
+
+            if x == 4: # If x is equal to 4
+                # Spawn the king at this position
+                king = GamePiece(window=self.window, board=self.board, name="king", color=(255,255,255), image_path=os.path.abspath("assets/images/king.jpg"))
+                king.set_position(grid_x=x, grid_y=7)
+                self.player_pieces.append(king)  # Append the king to the list
+
+
+    def place_pieces(self):
+        "Place game pieces on the board"
+        self.spawn_player_pieces() # Spawn the pieces of the player
+           
+            
+
 
     def run(self): 
         "Run the game loop."
@@ -38,8 +101,10 @@ class Game:
                        # otherwise it stops.
 
 
-        piece = GamePiece(self.window, board=self.board, name="king", color=(255,255,255), image_path="assets/images/king.jpg")          
-        piece.set_position(1,7)   
+        self.place_pieces()
+
+        #piece = GamePiece(self.window, board=self.board, name="king", color=(255,255,255), image_path="assets/images/king.jpg")          
+        #piece.set_position(1,7)   
 
         player_move = pygame.USEREVENT + 1 # Event which allow the player to move a piece
         pygame.time.set_timer(player_move, 100) # The player_move event will occur every 100 milliseconds  
@@ -54,7 +119,8 @@ class Game:
             keys = pygame.key.get_pressed() # Get the keys pressed by the player
             for event in pygame.event.get(): # Capture any event that happens during the game
                 if event.type == pygame.QUIT: # If the player wants to stop playing
-                    running = False  
+                    if ask_quit(): # If the player confirmed his choice
+                        running = False  
 
 
                 if keys[pygame.K_UP] or keys[pygame.K_z] and event.type == player_move: # If the player presses the up arrow key or the Z key
@@ -69,7 +135,11 @@ class Game:
                 if keys[pygame.K_RIGHT] or keys[pygame.K_d] and event.type == player_move: # If the player presses the right arrow key or the D key
                     piece.move_to(piece.original_grid_x +1, piece.original_grid_y) # Move the piece to the right              
 
-            piece.draw()
+
+            for piece in self.player_pieces: # For each piece of the player
+                piece.draw() # Draw the piece
+
+            #piece.draw()
 
             pygame.display.flip() # Update the display                    
 

@@ -17,7 +17,7 @@ class Board:
         square_size = 75 # Size for each square on the board
         square_spacing = 1 # Spacing between squares
         for row in range(len(self.grid)): # For each row of the grid
-            print(self.grid[row])
+            #print(self.grid[row])
             for col in range(len(self.grid[row])): # For each column of the row
 
                 x = col * (square_size + square_spacing) # x position for the current square

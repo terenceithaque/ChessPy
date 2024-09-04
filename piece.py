@@ -30,6 +30,7 @@ class GamePiece(pygame.sprite.Sprite):
         "Set the position of the piece on the board"
         self.original_grid_x = grid_x # Set the x position
         self.original_grid_y = grid_y # Set the y position
+        print(f"New position for {self.name} :",  self.original_grid_x, ",", self.original_grid_y)
         self.update_pixel_coordinates() # Update the pixel coordinates of the piece to display it on the board
 
 
@@ -39,11 +40,33 @@ class GamePiece(pygame.sprite.Sprite):
             grid_width = len(self.board.grid[0]) * (75 + 1) # 75 is the square size, 1 is the spacing
             grid_height = len(self.board.grid) * (75 + 1)   
 
+            print(f"Grid width : {grid_width}")
+            print(f"grid height : {grid_height}")
+
             # Update the pixel x and y coordinates
             self.pixel_x = self.original_grid_x * (75+1)
             self.pixel_y = self.original_grid_y * (75+1)
 
+            print("x coordinate :", self.pixel_x)
+            print("y coordinate :", self.pixel_y)
+            
+            # If the piece is out of the game board
+            if self.pixel_x < 0 : 
+                print(f"{self.name} is out of the board")
+                self.pixel_x = 0
 
+            if self.pixel_x > grid_width:
+                print(f"{self.name} is out of the board")
+                self.pixel_x = grid_width    
+
+            if self.pixel_y < 0:
+                print(f"{self.name} is out of the board")
+                self.pixel_y = 0
+
+            if self.pixel_y > 532:
+                print(f"{self.name} is out of the board")
+                self.pixel_y = 532    
+            
             self.rect.x = self.pixel_x
             self.rect.y = self.pixel_y
 
