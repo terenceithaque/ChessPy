@@ -123,7 +123,7 @@ class Game:
                         running = False  
 
 
-                if keys[pygame.K_UP] or keys[pygame.K_z] and event.type == player_move: # If the player presses the up arrow key or the Z key
+                """if keys[pygame.K_UP] or keys[pygame.K_z] and event.type == player_move: # If the player presses the up arrow key or the Z key
                     piece.move_to(piece.original_grid_x, piece.original_grid_y -1) # Move the piece forward
 
                 if keys[pygame.K_DOWN] or keys[pygame.K_s] and event.type == player_move: # If the player presses the down arrow key or the S key
@@ -134,7 +134,7 @@ class Game:
 
                 if keys[pygame.K_RIGHT] or keys[pygame.K_d] and event.type == player_move: # If the player presses the right arrow key or the D key
                     piece.move_to(piece.original_grid_x +1, piece.original_grid_y) # Move the piece to the right              
-
+                """
 
             for piece in self.player_pieces: # For each piece of the player
                 piece.draw() # Draw the piece

@@ -10,6 +10,16 @@ class GamePiece(pygame.sprite.Sprite):
         self.color = color # Color of the piece
         self.image = pygame.image.load(image_path) # Load the image which represents the piece
         self.image = pygame.transform.scale(self.image, (75, 70)) # Modify the dimensions of the image to 75x70
+        self.colored_image_surf = pygame.Surface(self.image.get_size()) # Surface that will host the colored image (color setting)
+        self.colored_image_surf.set_alpha(255)
+
+
+        # Fill the surface with the indicated RGB color
+        self.colored_image_surf.fill(color)
+        
+
+        # Draw the image
+        self.colored_image_surf.blit(self.image, (0,0), special_flags=pygame.BLEND_RGBA_MULT)
         
         self.rect = self.image.get_rect() # Get the image's rect
         self.window = window # The game window on which the piece must be displayed
@@ -81,7 +91,7 @@ class GamePiece(pygame.sprite.Sprite):
 
     def draw(self):
         "Draw the piece on the screen"
-        self.window.blit(self.image, (self.rect.x, self.rect.y)) # Draw the image at the current x and y positions    
+        self.window.blit(self.colored_image_surf, (self.rect.x, self.rect.y)) # Draw the surface of the image at current x and y positions
 
 
 
