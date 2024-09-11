@@ -3,6 +3,14 @@ import pygame
 import os
 import numpy as np
 
+
+def identify_piece_by_position(position=(0,0), pieces_list=[]): 
+    "Iterates over a list of game pieces, compares the position of the piece to the value of the position setting, if it matches, return the name of the piece"
+    for piece in pieces_list: # For each piece of the list
+        if piece.get_position() == position: # If the position of piece matches the position given to the function
+            return piece.name # Return the name of the piece
+
+
 class GamePiece(pygame.sprite.Sprite):
     def __init__(self, window, board, name="pawn", color=(255,255,255), image_path=os.path.abspath("assets/images/pawn.jpg")):
         "The GamePiece class allows to create a game piece with general attributes"
@@ -40,8 +48,13 @@ class GamePiece(pygame.sprite.Sprite):
         "Set the position of the piece on the board"
         self.original_grid_x = grid_x # Set the x position
         self.original_grid_y = grid_y # Set the y position
-        print(f"New position for {self.name} :",  self.original_grid_x, ",", self.original_grid_y)
+        #print(f"New position for {self.name} :",  self.original_grid_x, ",", self.original_grid_y)
         self.update_pixel_coordinates() # Update the pixel coordinates of the piece to display it on the board
+
+    def get_position(self):
+        "Returns a tuple with the current x and y positions of the piece"
+        print(f"{self.name}'s position is {(self.original_grid_x, self.original_grid_y)}")
+        return (self.original_grid_x, self.original_grid_y) 
 
 
     def update_pixel_coordinates(self):

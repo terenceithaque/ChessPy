@@ -88,9 +88,54 @@ class Game:
                 self.player_pieces.append(king)  # Append the king to the list
 
 
+    def spawn_enemy_pieces(self):
+        "Spawn all the enemy's pieces"
+        self.enemy_pieces = [] # List of pieces owned by the enemy
+
+        for x in range(8): # For any x number between 0 included and 8 excluded
+            # Spawn a new pawn at (x=x, y=1) positions
+            pawn = GamePiece(window=self.window, board=self.board, name="pawn", color=(76,39,40), image_path=os.path.abspath("assets/images/pawn.jpg"))
+            pawn.set_position(grid_x=x, grid_y=1)
+            self.enemy_pieces.append(pawn)
+
+
+        for x in range(8):  # For any x number between 0 included and 8 excluded
+            # Spawn other pieces
+            if x == 0 or x == 7: # If x is equal to 0 or 7
+                # Spawn a rook at this position
+                rook = GamePiece(window=self.window, board=self.board, name="rook", color=(76,39,40), image_path=os.path.abspath("assets/images/rook.jpg"))
+                rook.set_position(grid_x=x, grid_y=0)
+                self.enemy_pieces.append(rook)
+
+            if x == 1 or x == 6: # If x is equal to 1 or 6
+                # Spawn a kinght at this position
+                knight = GamePiece(window=self.window, board=self.board, name="knight", color=(76,39,40), image_path=os.path.abspath("assets/images/knight.jpg"))
+                knight.set_position(grid_x=x, grid_y=0)
+                self.enemy_pieces.append(knight)    
+
+            if x == 2 or x == 5: # If x is equal to 2 or 5
+                # Spawn a bishop at this position
+                bishop = GamePiece(window=self.window, board=self.board, name="bishop", color=(76,39,40), image_path=os.path.abspath("assets/images/bishop.jpg"))
+                bishop.set_position(grid_x=x, grid_y=0)
+                self.enemy_pieces.append(bishop)
+
+            if x == 3: # If x is stricly equal to 3
+                # Spawn the queen at this position
+                queen = GamePiece(window=self.window, board=self.board, name="queen", color=(76,39,40), image_path=os.path.abspath("assets/images/queen.jpg"))
+                queen.set_position(grid_x=x, grid_y=0)
+                self.enemy_pieces.append(queen)
+
+            if x == 4: # If x is stricly equal to 4      
+                # Spawn the king at this position
+                king = GamePiece(window=self.window, board=self.board, name="king", color=(76,39,40), image_path=os.path.abspath("assets/images/king.jpg"))
+                king.set_position(grid_x=x, grid_y=0)
+                self.enemy_pieces.append(king) 
+
+
     def place_pieces(self):
         "Place game pieces on the board"
         self.spawn_player_pieces() # Spawn the pieces of the player
+        self.spawn_enemy_pieces() # Spawn the pieces of the enemy
            
             
 
@@ -102,6 +147,8 @@ class Game:
 
 
         self.place_pieces()
+
+        print(f"Piece at position {(7, 6)} :", identify_piece_by_position(position=(7,6), pieces_list=self.player_pieces))
 
         #piece = GamePiece(self.window, board=self.board, name="king", color=(255,255,255), image_path="assets/images/king.jpg")          
         #piece.set_position(1,7)   
@@ -138,6 +185,9 @@ class Game:
 
             for piece in self.player_pieces: # For each piece of the player
                 piece.draw() # Draw the piece
+
+            for piece in self.enemy_pieces: # For each piece of the enemy
+                piece.draw() # Draw the piece    
 
             #piece.draw()
 
