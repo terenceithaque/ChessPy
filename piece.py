@@ -4,16 +4,32 @@ import os
 import numpy as np
 
 
-def identify_piece_by_position(position=(0,0), pieces_list=[]): 
-    "Iterates over a list of game pieces, compares the position of the piece to the value of the position setting, if it matches, return the name of the piece"
+class NotGamePieceException(Exception):
+    "An exception that raises if an object is not of type GamePiece"
+    def __init__(self, message):
+        super().__init__(message)
+
+
+def identify_piece_by_position(position=(0,0), pieces_list=[], return_object=False): 
+    """Iterates over a list of game pieces, compares the position of the piece to the value of the position setting, if it matches, return the name of the piece or the piece itself.
+    - The position setting represent a tuple containing (x,y) where x and y are the positions of the piece to be identified
+    - The pieces_list setting represent the group of pieces in which we must search a piece that have the position described by the position setting
+    - return_object is a boolean with False as default value. If it's False, the function only returns the name of the piece that have the described position, otherwise it returns the whole usable piece object."""
+    
     for piece in pieces_list: # For each piece of the list
+        if type(piece).__name__ != "GamePiece": # If the piece is not a GamePiece object
+            raise NotGamePieceException(message=f"Objects in the pieces_list setting must be GamePiece objects, not {type(piece).__name__} objects.") # Raise a NotGamePieceException error
         if piece.get_position() == position: # If the position of piece matches the position given to the function
-            return piece.name # Return the name of the piece
+            if return_object: # If we must return the whole piece object, not simply the name
+                return piece # Return the piece object
+            
+            return piece.name # If we only have to return the name of the piece, then return just the name
 
 
 class GamePiece(pygame.sprite.Sprite):
     def __init__(self, window, board, name="pawn", color=(255,255,255), image_path=os.path.abspath("assets/images/pawn.jpg")):
         "The GamePiece class allows to create a game piece with general attributes"
+        super().__init__() # We inherit of the Sprite object from pygame.sprite
         self.name = name # Name of the piece (pawn, rook, king,...)
         self.color = color # Color of the piece
         self.image = pygame.image.load(image_path) # Load the image which represents the piece

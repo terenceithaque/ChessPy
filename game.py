@@ -148,7 +148,7 @@ class Game:
 
         self.place_pieces()
 
-        print(f"Piece at position {(7, 6)} :", identify_piece_by_position(position=(7,6), pieces_list=self.player_pieces))
+        print(f"Piece at position {(7, 6)} :", identify_piece_by_position(position=(7,6), pieces_list=self.player_pieces, return_object=True))
 
         #piece = GamePiece(self.window, board=self.board, name="king", color=(255,255,255), image_path="assets/images/king.jpg")          
         #piece.set_position(1,7)   
