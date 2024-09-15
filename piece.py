@@ -19,11 +19,30 @@ def identify_piece_by_position(position=(0,0), pieces_list=[], return_object=Fal
     for piece in pieces_list: # For each piece of the list
         if type(piece).__name__ != "GamePiece": # If the piece is not a GamePiece object
             raise NotGamePieceException(message=f"Objects in the pieces_list setting must be GamePiece objects, not {type(piece).__name__} objects.") # Raise a NotGamePieceException error
+        
         if piece.get_position() == position: # If the position of piece matches the position given to the function
             if return_object: # If we must return the whole piece object, not simply the name
                 return piece # Return the piece object
             
             return piece.name # If we only have to return the name of the piece, then return just the name
+        
+
+def identify_piece_by_rect(rect=pygame.Rect(0, 0, 1, 1), pieces_list=[], return_object=False):
+    """Iterates over a list of game pieces, compares the rect of the piece to the value of the rect setting, if it matches, return the name of the piece or the piece itself.
+    - The rect is the rect of the piece we want to find
+    - The pieces_list setting represent the group of pieces in which we must search a piece that have the rect described by the rect setting
+    - return_object is a boolean with False as default value. If it's False, the function only returns the name of the piece that have the described rect, otherwise it returns the whole usable piece object."""
+    
+    for piece in pieces_list: # For each piece of the list
+        if type(piece).__name__ != "GamePiece": # If the piece is not a GamePiece object
+            raise NotGamePieceException(message=f"Objects in the pieces_list setting must be GamePiece objects, not {type(piece).__name__} objects.") # Raise a NotGamePieceException error
+        
+        print(f"Piece rect {piece.rect}")
+        if pygame.Rect.colliderect(piece.rect, rect): # If the rect of the piece is equal to the rect value given as setting
+            if return_object: # If we must return the whole object
+                return piece
+            
+            return piece.name # Otherwise, return only the name of the piece
 
 
 class GamePiece(pygame.sprite.Sprite):
@@ -69,7 +88,7 @@ class GamePiece(pygame.sprite.Sprite):
 
     def get_position(self):
         "Returns a tuple with the current x and y positions of the piece"
-        print(f"{self.name}'s position is {(self.original_grid_x, self.original_grid_y)}")
+        #print(f"{self.name}'s position is {(self.original_grid_x, self.original_grid_y)}")
         return (self.original_grid_x, self.original_grid_y) 
 
 
@@ -79,31 +98,31 @@ class GamePiece(pygame.sprite.Sprite):
             grid_width = len(self.board.grid[0]) * (75 + 1) # 75 is the square size, 1 is the spacing
             grid_height = len(self.board.grid) * (75 + 1)   
 
-            print(f"Grid width : {grid_width}")
-            print(f"grid height : {grid_height}")
+            #print(f"Grid width : {grid_width}")
+            #print(f"grid height : {grid_height}")
 
             # Update the pixel x and y coordinates
             self.pixel_x = self.original_grid_x * (75+1)
             self.pixel_y = self.original_grid_y * (75+1)
 
-            print("x coordinate :", self.pixel_x)
-            print("y coordinate :", self.pixel_y)
+            #print("x coordinate :", self.pixel_x)
+            #print("y coordinate :", self.pixel_y)
             
             # If the piece is out of the game board
             if self.pixel_x < 0 : 
-                print(f"{self.name} is out of the board")
+                #print(f"{self.name} is out of the board")
                 self.pixel_x = 0
 
             if self.pixel_x > grid_width:
-                print(f"{self.name} is out of the board")
+                #print(f"{self.name} is out of the board")
                 self.pixel_x = grid_width    
 
             if self.pixel_y < 0:
-                print(f"{self.name} is out of the board")
+                #print(f"{self.name} is out of the board")
                 self.pixel_y = 0
 
             if self.pixel_y > 532:
-                print(f"{self.name} is out of the board")
+                #print(f"{self.name} is out of the board")
                 self.pixel_y = 532    
             
             self.rect.x = self.pixel_x

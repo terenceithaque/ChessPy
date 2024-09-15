@@ -16,6 +16,9 @@ win_width = 800 # The width of a game window
 win_height = 600 # The height of a game window
 
 
+
+
+
 def ask_quit():
     "Ask the player if he wants to quit the game and returns a boolean"
     # Ask the player if he wants to quit
@@ -163,11 +166,28 @@ class Game:
             self.board.draw_squares() # Draw the squares of the board
 
 
+
+            
+            mouse_position = pygame.mouse.get_pos() # Get the position of the mouse
+            #print(f"Mouse position : {mouse_position}")
+
+            mouse_rect = pygame.Rect(mouse_position[0], mouse_position[1], 1, 1) # Create a Rect object representing the rect of the mouse based on its position
+
             keys = pygame.key.get_pressed() # Get the keys pressed by the player
             for event in pygame.event.get(): # Capture any event that happens during the game
                 if event.type == pygame.QUIT: # If the player wants to stop playing
                     if ask_quit(): # If the player confirmed his choice
-                        running = False  
+                        running = False 
+
+
+                elif event.type == pygame.MOUSEBUTTONDOWN: # If the player clicked a button of the mouse
+                        print("Player clicked a button of the mouse")
+                        print(f"Mouse rect : {mouse_rect}")
+                        for piece in self.player_pieces: # For each piece of the player
+                            if pygame.Rect.colliderect(piece.rect, mouse_rect): # If the mouse is in collision with the piece
+                                selected_piece = identify_piece_by_rect(rect=piece.rect, pieces_list=self.player_pieces, return_object=True) # Identify the selected piece by its rect and return the corresponding usable object
+
+                                print(f"The player clicked on {selected_piece}") 
 
 
                 """if keys[pygame.K_UP] or keys[pygame.K_z] and event.type == player_move: # If the player presses the up arrow key or the Z key
@@ -183,9 +203,10 @@ class Game:
                     piece.move_to(piece.original_grid_x +1, piece.original_grid_y) # Move the piece to the right              
                 """
 
-            for piece in self.player_pieces: # For each piece of the player
-                piece.draw() # Draw the piece
 
+            for piece in self.player_pieces: # For each piece of the player
+                    piece.draw() # Draw the piece
+            
             for piece in self.enemy_pieces: # For each piece of the enemy
                 piece.draw() # Draw the piece    
 

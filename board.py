@@ -11,6 +11,8 @@ class Board:
 
         self.squares = [] # List of all squares in the board
 
+        print(f"Board dimensions : {self.get_dimensions()}")
+
     def draw_squares(self):
         "Draws all board squares based on the length of the grid"
 
@@ -26,3 +28,9 @@ class Board:
                 square_color = self.square_colors[(row + col) % len(self.square_colors)]  # Color of the current square
 
                 pygame.draw.rect(self.window, square_color, (x,y, square_size, square_size)) # Draw the square
+
+    def get_dimensions(self):
+        "Return the dimensions of the board as a tuple of int numbers"
+        width = len(self.grid[0]) 
+        height = len(self.grid) 
+        return (width, height)
