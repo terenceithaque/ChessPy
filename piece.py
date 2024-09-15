@@ -2,12 +2,10 @@
 import pygame
 import os
 import numpy as np
+from personalized_exceptions import * # Import personalized_exceptions to access game-specific exceptions
 
 
-class NotGamePieceException(Exception):
-    "An exception that raises if an object is not of type GamePiece"
-    def __init__(self, message):
-        super().__init__(message)
+
 
 
 def identify_piece_by_position(position=(0,0), pieces_list=[], return_object=False): 
