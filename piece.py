@@ -47,7 +47,10 @@ class GamePiece(pygame.sprite.Sprite):
     def __init__(self, window, board, name="pawn", color=(255,255,255), image_path=os.path.abspath("assets/images/pawn.jpg")):
         "The GamePiece class allows to create a game piece with general attributes"
         super().__init__() # We inherit of the Sprite object from pygame.sprite
+        self.available_names = ["pawn", "rook", "knight", "bishop", "king", "queen"] # List of available names for a game piece
         self.name = name # Name of the piece (pawn, rook, king,...)
+        if self.name.lower() not in self.available_names: # If the current name of the piece isn't available
+            raise NameNotAvailableException(message=f"Name {self.name} is not available for GamePiece objects. Available names are {self.available_names}.") # Raise a NameNotAvailableException
         self.color = color # Color of the piece
         self.image = pygame.image.load(image_path) # Load the image which represents the piece
         self.image = pygame.transform.scale(self.image, (75, 70)) # Modify the dimensions of the image to 75x70
