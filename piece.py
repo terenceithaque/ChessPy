@@ -2,7 +2,7 @@
 import pygame
 import os
 import numpy as np
-from personalized_exceptions import * # Import personalized_exceptions to access game-specific exceptions
+from customized_exceptions import * # Import customized_exceptions to access game-specific exceptions
 
 
 

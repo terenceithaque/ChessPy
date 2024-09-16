@@ -1,4 +1,4 @@
-"Personalized exceptions for the game"
+"Customized exceptions for the game"
 
 class NotGamePieceException(Exception):
     "An exception that raises if an object is not of type GamePiece"
