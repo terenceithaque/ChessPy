@@ -79,6 +79,19 @@ class GamePiece(pygame.sprite.Sprite):
         self.original_grid_x = None
         self.original_grid_y = None
 
+        # Dictionnary of possible moves for each piece in the game.
+        # For each piece name, we associate a list of moves, and each move has a name  of the  'move_name-max_cells_by_move' or a single letter that looks like the form of the move
+        self.pieces_moves = {"pawn":["vert-1", "vert-2"], # Pawns can move vertically 1 time, but max 2 times at the beginning of the game
+                             "knight":["L"], # Knights can make a 'L'-like move
+                             "bishop":["angled-any"], # Bishops can move in angle for any distance they want, hence the 'any' distance
+                             "rook":["vert-any"], # Rooks can move vertically for any distance they want, hence the 'any' distance
+                             "king":["any-1"], # Kings can move in any direction they want, but only at a distance of 1
+                             "queen":["any-any"] # Queens can move in any direction they want and for any distance they want
+                             }  
+        
+        
+        self.available_moves = self.pieces_moves[self.name] # Get the available moves for the current piece
+        print(f"Available moves for {self.name} : {self.available_moves}")
 
     def set_position(self, grid_x, grid_y):
         "Set the position of the piece on the board"
