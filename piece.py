@@ -93,6 +93,38 @@ class GamePiece(pygame.sprite.Sprite):
         self.available_moves = self.pieces_moves[self.name] # Get the available moves for the current piece
         print(f"Available moves for {self.name} : {self.available_moves}")
 
+
+
+    def calculate_moves(self):
+        "Calculate possible moves on the board for the piece"
+        for move in self.available_moves: # For each available move
+            current_position = self.get_position() # Get the current position of the piece
+            current_x = current_position[0] # The current x position
+            current_y = current_position[1] # The current y position
+            if move == "vert-1": # If the piece can move vertically by one cell
+                #current_cell = self.board.grid[current_y][current_x]  # Get the cell where the piece is actually
+                print(f"{self.name}'s current cell is {[current_y, current_x]}")
+
+                
+
+            elif move == "vert-2": # If the piece can move vertically by two cells
+                 print(f"{self.name}'s current cell is {[current_y, current_x]}")
+
+            if move == "L": # If the piece can make a L-like move
+                 print(f"{self.name}'s current cell is {[current_y, current_x]}")
+
+            if move == "angled-any": # # If the piece can move in angle by any number of cells
+                 print(f"{self.name}'s current cell is {[current_y, current_x]}")
+
+            if move == "vert-any": # If the piece can move vertically by any number of cells
+                 print(f"{self.name}'s current cell is {[current_y, current_x]}")
+
+            if move == "any-1": # If the piece can move in any direction by one cell
+                 print(f"{self.name}'s current cell is {[current_y, current_x]}")
+
+            if move == "any-any": # If the piece can move in any direction by any number of cells
+                 print(f"{self.name}'s current cell is {[current_y, current_x]}")
+
     def set_position(self, grid_x, grid_y):
         "Set the position of the piece on the board"
         self.original_grid_x = grid_x # Set the x position

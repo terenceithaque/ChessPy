@@ -186,8 +186,8 @@ class Game:
                         for piece in self.player_pieces: # For each piece of the player
                             if pygame.Rect.colliderect(piece.rect, mouse_rect): # If the mouse is in collision with the piece
                                 selected_piece = identify_piece_by_rect(rect=piece.rect, pieces_list=self.player_pieces, return_object=True) # Identify the selected piece by its rect and return the corresponding usable object
-
                                 print(f"The player clicked on {selected_piece}") 
+                                piece.calculate_moves()
 
 
                 """if keys[pygame.K_UP] or keys[pygame.K_z] and event.type == player_move: # If the player presses the up arrow key or the Z key

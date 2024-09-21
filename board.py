@@ -9,7 +9,7 @@ class Board:
 
         self.square_colors = [(255, 228, 196 ), (0, 0, 0)] # Colors for the squares on the board, in RGB encoding. The first one stands for "bisque", and the second one for "black".
 
-        self.squares = [] # List of all squares in the board
+        self.squares = [] # List of all squares in the board, where each square is a surface
 
         print(f"Board dimensions : {self.get_dimensions()}")
 
@@ -21,14 +21,19 @@ class Board:
         for row in range(len(self.grid)): # For each row of the grid
             #print(self.grid[row])
             for col in range(len(self.grid[row])): # For each column of the row
+                square_surf = pygame.Surface((square_size, square_size)) # Create a surface to contain the square
 
                 x = col * (square_size + square_spacing) # x position for the current square
                 y = row * (square_size + square_spacing) # y position for the current square
 
                 square_color = self.square_colors[(row + col) % len(self.square_colors)]  # Color of the current square
+                
+                square_surf.fill(square_color) # Fill the surface with the square's color
 
-                pygame.draw.rect(self.window, square_color, (x,y, square_size, square_size)) # Draw the square
+                self.window.blit(square_surf, (x,y)) # Draw the square
 
+                self.squares.append(square_surf) # Append the square's surface to the list of squares
+    
     def get_dimensions(self):
         "Return the dimensions of the board as a tuple of int numbers"
         width = len(self.grid[0]) 
