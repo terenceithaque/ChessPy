@@ -44,14 +44,32 @@ def identify_piece_by_rect(rect=pygame.Rect(0, 0, 1, 1), pieces_list=[], return_
 
 
 class GamePiece(pygame.sprite.Sprite):
-    def __init__(self, window, board, name="pawn", color=(255,255,255), image_path=os.path.abspath("assets/images/pawn.jpg")):
-        "The GamePiece class allows to create a game piece with general attributes"
+     """The GamePiece class allows to create a game piece with general attributes.
+        - window is the window on which the piece must appear
+        - board is the game board on which the piece must appear
+        - name is the name of the piece ('pawn', 'king',etc)
+        -  color is a RGB tuple representing the color with which the piece is drawn
+        - direction is a int number which represents the direction in which the piece will move. If it's 1, it will go upward, but if it's -1, it will go downward.
+        - image_path is the file path leading to the image that represent the piece
+        - group is the list of pieces to which the current piece belong to
+     """
+     def __init__(self, window, board, name="pawn", color=(255,255,255), direction=1, image_path=os.path.abspath("assets/images/pawn.jpg"), group=[]):
+        "Init the GamePiece object with its attributes"
         super().__init__() # We inherit of the Sprite object from pygame.sprite
+
+        group_type = type(group).__name__  # Type of the 'group' parameter
+        if not type(group).__name__ == "list": # If the 'group' argument was not defined as a list
+            raise IllegalValueException(message=f"'group' parameter must be of type list, not {group_type}")
+        
+        
         self.available_names = ["pawn", "rook", "knight", "bishop", "king", "queen"] # List of available names for a game piece
         self.name = name # Name of the piece (pawn, rook, king,...)
         if self.name.lower() not in self.available_names: # If the current name of the piece isn't available
             raise NameNotAvailableException(message=f"Name {self.name} is not available for GamePiece objects. Available names are {self.available_names}.") # Raise a NameNotAvailableException
         self.color = color # Color of the piece
+        self.group = group # The group of pieces to which the current GamePiece object belongs to
+        self.direction = direction # The direction in which the piece will move
+
         self.image = pygame.image.load(image_path) # Load the image which represents the piece
         self.image = pygame.transform.scale(self.image, (75, 70)) # Modify the dimensions of the image to 75x70
         self.colored_image_surf = pygame.Surface(self.image.get_size()) # Surface that will host the colored image (color setting)
@@ -94,51 +112,136 @@ class GamePiece(pygame.sprite.Sprite):
         print(f"Available moves for {self.name} : {self.available_moves}")
 
 
+        self.moves = 0 # Number of moves made by the piece
 
-    def calculate_moves(self):
-        "Calculate possible moves on the board for the piece"
+
+
+     def calculate_moves(self):
+        "Calculate on which cells the piece can move to on the board"
+        possible_cells = [] # List of the cells on which the piece can move
+
+        if self.moves == 0:
+            print(f"{self.name} made no move yet.")
+
+
         for move in self.available_moves: # For each available move
             current_position = self.get_position() # Get the current position of the piece
             current_x = current_position[0] # The current x position
             current_y = current_position[1] # The current y position
             if move == "vert-1": # If the piece can move vertically by one cell
-                #current_cell = self.board.grid[current_y][current_x]  # Get the cell where the piece is actually
-                print(f"{self.name}'s current cell is {[current_y, current_x]}")
+                current_cell = (current_y,current_x)  # Get the cell where the piece is actually
+                print(f"{self.name}'s current cell is {current_cell}")
+                for line_y in range(1, len(self.board.grid)): # For the whole height of the grid
+                    if self.direction == 1: # If the piece can move upward
+                        print(f"Checking upward for {move}...")
+                        if line_y == current_y -1: # If the y line represents the line just before the line where the piece is
+                            for cell_x in range(len(self.board.grid[line_y])): # For every x cell in the current line
+                                if cell_x == current_x: # If the cell is just before the cell where the piece is
+                                    for piece in self.group: # For each piece of the group
+                                        if not piece.get_position() == (cell_x, line_y): # If there is no piece already present on the available cell
+                                            if not (line_y, cell_x) in possible_cells: # If the coordinates of the sell aren't already in the list
+                                                possible_cells.append((cell_x, line_y)) # Append the position of the cell to the list
 
-                
+                    elif self.direction == -1: # If the piece can go downward
+                        print(f"Checking downward for {move}...")
+                        next = current_y + 1 # Line just after the one where the piece is located
+                        if line_y == next: # If the y line represents the line just after the line where the piece is
+                            for cell_x in range(len(self.board.grid[line_y])): # For every x cell in the current line
+                                if cell_x == current_x: # If the cell is just before the cell where the piece is
+                                    for piece in self.group: # For each piece of the group
+                                        if not piece.get_position() == (cell_x, line_y): # If there is no piece already present on the available cell
+                                            if not (line_y, cell_x) in possible_cells: # If the coordinates of the sell aren't already in the list
+                                                possible_cells.append((cell_x, line_y)) # Append the position of the cell to the list
 
-            elif move == "vert-2": # If the piece can move vertically by two cells
-                 print(f"{self.name}'s current cell is {[current_y, current_x]}")
+                                        
+
+
+            if move == "vert-2" and self.moves == 0: # If the piece can move vertically by two cells and she did no move yet
+                current_cell = (current_y,current_x)  # Get the cell where the piece is actually
+                print(f"{self.name}'s current cell is {current_cell}")
+                for line_y in range(2, len(self.board.grid)): # For the whole height of the grid
+                    if self.direction == 1: # If the piece can move upward
+                        print(f"Checking upward for {move}...")
+                        if line_y == current_y -2: # If the current y line is separated by one line with the current piece's line, downward
+                            for cell_x in range(len(self.board.grid[line_y])): # For every x cell in the current line
+                                if cell_x == current_x: # If the cell is just before the cell where the piece is
+                                    for piece in self.group: # For each piece of the group
+                                        if not piece.get_position() == (cell_x, line_y): # If there is no piece already present on the cell
+                                            if not (cell_x, line_y) in possible_cells: # If the coordinates of the sell aren't already in the list
+                                                possible_cells.append((cell_x, line_y))# Append the position of the cell to the list
+
+                    elif self.direction == -1: # If the piece can go downward
+                        print(f"Checking downward for {move}...")
+                        if line_y == current_y + 2:  # If the current y line is separated by one line with the current piece's line, upward
+                            for cell_x in range(len(self.board.grid[line_y])): # For every x cell in the current line
+                                for piece in self.group: # For each piece of the group
+                                    if not piece.get_position() == (cell_x, line_y): # If there is no piece already present on the cell
+                                        if not (cell_x, line_y) in possible_cells: # If the coordinates of the sell aren't already in the list
+                                            possible_cells.append((cell_x, line_y)) # Append the position of the cell to the list
+
 
             if move == "L": # If the piece can make a L-like move
-                 print(f"{self.name}'s current cell is {[current_y, current_x]}")
+                 current_cell = (current_y,current_x)  # Get the cell where the piece is actually
+                 print(f"{self.name}'s current cell is {current_cell}")
+                 if self.direction == 1: # If the piece can go upward
+                    if current_y -3 >= 0: # Check that the piece won't get out of the board
+                        for line_y in range(current_y, current_y-3, -1): # For any of the first three lines before the current line of the piece
+                            for cell_x in range(len(self.board.grid[line_y])): # For any cell in this line
+                                for piece in self.group: # For each piece in the same group than the current piece
+                                    if not piece.get_position() == (cell_x, line_y): # If that piece isn't currently on the cell
+                                        if not (cell_x, line_y) in possible_cells:
+                                            possible_cells.append((cell_x, line_y)) # Append the position of the cell to the list of possible cells
+
+                 if self.direction == -1: # If the piece can go downward
+                     if current_y + 3 <= len(self.board.grid) - 1: # Check that the piece won't get out of the board
+                         for line_y in range(current_y, current_y + 3, 1): # For any of the first three lines after the current line of the piece
+                             for cell_x in range(len(self.board.grid[line_y])):  # For any cell in that line
+                                 for piece in self.group: # For each piece in the same group than the current piece
+                                     if not piece.get_position() == (cell_x, line_y): # If the cell isn't currently occupied by that piece
+                                         if not (cell_x, line_y) in possible_cells:
+                                            possible_cells.append((cell_x, line_y)) # Append the position of the cell to the list                      
+                                 
+
+
+                     
+                     
+
 
             if move == "angled-any": # # If the piece can move in angle by any number of cells
-                 print(f"{self.name}'s current cell is {[current_y, current_x]}")
+                 current_cell = (current_y,current_x)  # Get the cell where the piece is actually
+                 print(f"{self.name}'s current cell is {current_cell}")
 
             if move == "vert-any": # If the piece can move vertically by any number of cells
-                 print(f"{self.name}'s current cell is {[current_y, current_x]}")
+                 current_cell = (current_y,current_x)  # Get the cell where the piece is actually
+                 print(f"{self.name}'s current cell is {current_cell}")
 
             if move == "any-1": # If the piece can move in any direction by one cell
-                 print(f"{self.name}'s current cell is {[current_y, current_x]}")
+                 current_cell = (current_y,current_x)  # Get the cell where the piece is actually
+                 print(f"{self.name}'s current cell is {current_cell}")
 
             if move == "any-any": # If the piece can move in any direction by any number of cells
-                 print(f"{self.name}'s current cell is {[current_y, current_x]}")
+                 current_cell = (current_y,current_x)  # Get the cell where the piece is actually
+                 print(f"{self.name}'s current cell is {current_cell}")
 
-    def set_position(self, grid_x, grid_y):
+
+        return possible_cells # Return the list with the position of each cell to which the piece can move         
+
+     def set_position(self, grid_x, grid_y):
         "Set the position of the piece on the board"
+        print(f"Moving {self.name} to {(grid_x, grid_y)}")
         self.original_grid_x = grid_x # Set the x position
         self.original_grid_y = grid_y # Set the y position
         #print(f"New position for {self.name} :",  self.original_grid_x, ",", self.original_grid_y)
         self.update_pixel_coordinates() # Update the pixel coordinates of the piece to display it on the board
+        #self.moves += 1 
 
-    def get_position(self):
+     def get_position(self):
         "Returns a tuple with the current x and y positions of the piece"
         #print(f"{self.name}'s position is {(self.original_grid_x, self.original_grid_y)}")
         return (self.original_grid_x, self.original_grid_y) 
 
 
-    def update_pixel_coordinates(self):
+     def update_pixel_coordinates(self):
         "Update pixel coordinates based on grid coordinates"
         if self.board:
             grid_width = len(self.board.grid[0]) * (75 + 1) # 75 is the square size, 1 is the spacing
@@ -175,7 +278,7 @@ class GamePiece(pygame.sprite.Sprite):
             self.rect.y = self.pixel_y
 
 
-    def move_to(self, new_grid_x, new_grid_y):
+     def move_to(self, new_grid_x, new_grid_y):
         "Move the piece"     
         self.set_position(new_grid_x, new_grid_y) # Update the position of the piece  
             
@@ -183,7 +286,7 @@ class GamePiece(pygame.sprite.Sprite):
         
 
 
-    def draw(self):
+     def draw(self):
         "Draw the piece on the screen"
         self.window.blit(self.colored_image_surf, (self.rect.x, self.rect.y)) # Draw the surface of the image at current x and y positions
 

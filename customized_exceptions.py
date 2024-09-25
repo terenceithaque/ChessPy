@@ -12,5 +12,14 @@ class NameNotAvailableException(Exception):
         super().__init__(message) # Init the exception with the message setting
 
 
+class IllegalValueException(Exception):
+    "An exception that raises if  has an illegal value"
+    def __init__(self, message="Argument has an illegal value"):
+        super().__init__(message) # Init the exception with the message setting
+
+
+
+
+
 
         
