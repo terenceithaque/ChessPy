@@ -12,7 +12,7 @@ from board import * # The board.py script contains a Board class which represent
 from piece import * # The piece.py script contains a GamePiece class which allows to add a piece (pawn, king,...) to the game
 import os
 
-win_width = 800 # The width of a game window
+win_width = 600 # The width of a game window
 win_height = 600 # The height of a game window
 
 
